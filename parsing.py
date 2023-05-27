@@ -1,4 +1,14 @@
 import re
+from midiutil import MIDIFile
+
+class Note:
+    def __init__(self, midiNote,  time, track=0, channel=0, duration=1, volume=100):    
+        self.midiNote = midiNote
+        self.track = track
+        self.channel = channel
+        self.time = time
+        self.duration = duration
+        self.volume = volume
 
 def getChords(filepath):
     with open(filepath, 'rt', encoding="utf-8") as f:
@@ -16,8 +26,18 @@ def getRoot(chord):
 
 def parseChord(chord):
     root = getRoot(chord)
-    print(root)
+    notes = []
     
+def exportNotesToMidiFile(notes, tempo):
+    midiFile = MIDIFile(1)
+    midiFile.addTempo(0, 0, tempo)
+    
+    for note in notes:
+        midiFile.addNote(note.track, note.channel, note.midiNote, note.time, note.duration, note.volume)
+
+    with open("output.mid", "wb") as f:
+        midiFile.writeFile(f)
+     
 def parseAllChords(chords):
     for i in range(0, len(chords)):
         chord = chords[i]
@@ -32,3 +52,4 @@ def parseAllChords(chords):
 #------------------------------------MAIN------------------------------------
 chords = getChords('input.txt')
 parseAllChords(chords)
+exportNotesToMidiFile(80)
