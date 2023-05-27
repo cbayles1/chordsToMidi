@@ -10,20 +10,25 @@ def getChords(filepath):
         return data_list
 
 def getRoot(chord):
-    if len(chord) > 1 and chord[1] == '#' or chord[1] == 'b':
+    if len(chord) > 1 and (chord[1] == '#' or chord[1] == 'b'):
         return chord[0:2]
     return chord[0]
 
-def parseChord(chord, prevChord=None):
-    root =
-    if chord[0] == '~' and prevChord:
-        root = prev
-    else:
-        root = getRoot(chord)
-        
+def parseChord(chord):
+    root = getRoot(chord)
+    print(root)
+    
+def parseAllChords(chords):
+    for i in range(0, len(chords)):
+        chord = chords[i]
+        if chord[0] == '~':
+            if i <= 0:
+                raise Exception("You cannot start a progression with '~'!")
+            else:
+                chords[i] = chords[i-1]
+                chord = chords[i-1]
+        parseChord(chord)
 
 #------------------------------------MAIN------------------------------------
 chords = getChords('input.txt')
-
-for chord in chords:
-    parseChord(chord)
+parseAllChords(chords)
