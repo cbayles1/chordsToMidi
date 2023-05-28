@@ -46,14 +46,33 @@ def calcInversionDistance(nc, prevnc):
         
     return sum
 
+def inverter(nc, prevnc, amtForLoops, forLoopIndex):
+    if forLoopIndex >= amtForLoops:
+        print(str(nc) + "\t" + str(prevnc) + "\t" + str(calcInversionDistance(nc, prevnc)))
+    else:
+        for i in range(-1,2):
+            nc[forLoopIndex].from_int(nc[forLoopIndex].__int__() + 12 * i)
+            print(nc[forLoopIndex])
+            inverter(nc, prevnc, amtForLoops, forLoopIndex + 1)
+
 def closestInversions(nc, prevnc):
-    for note in nc:
-        a = nc
-        for i in range(3): #TODO: CHANGE FROM 3
-            print(str(a) + "\t" + str(prevnc) + "\t" + str(calcInversionDistance(a, prevnc)))
-            a = mchords.invert(a) #TODO: ISN'T WILLING TO DEVIATE FROM ORIGINAL PITCHES, IT JUST SHUFFLES
-            a[2].octave_up() #TODO: GO DOWN TOO
-        print()
+    numNotes = min(len(nc), len(prevnc))
+    inverter(nc, prevnc, numNotes, 0)
+    
+#    print(str(a) + "\t" + str(prevnc) + "\t" + str(calcInversionDistance(a, prevnc)))
+    
+    #for i in range(nc[0] - 12, nc[0] + 12, 12):
+    #    for j in range(nc[1] - 12, nc[1] + 12, 12):
+    #        for k in range(nc[2] - 12, nc[2] + 12, 12):
+    #            etc etc ...   
+    
+    #for note in nc:
+    #    a = nc
+    #    for i in range(3): #TODO: CHANGE FROM 3
+    #        print(str(a) + "\t" + str(prevnc) + "\t" + str(calcInversionDistance(a, prevnc)))
+    #        a = mchords.invert(a) #TODO: ISN'T WILLING TO DEVIATE FROM ORIGINAL PITCHES, IT JUST SHUFFLES
+    #        a[2].octave_up() #TODO: GO DOWN TOO
+    #    print()
             
     return nc
 
