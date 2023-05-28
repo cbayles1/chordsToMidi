@@ -1,3 +1,21 @@
-Bb7 ~ ~ ~
-Eb7 ~ Bb7 ~
-F7 Eb7 Bb7 ~
+output.midi 200 0
+
+Cm7 F7 
+Bbmaj7 Eb7
+Am7b5 D7
+Gm7 G7
+
+Cm7 F7 
+Bbmaj7 Eb7
+Am7b5 D7
+Gm7 G7
+
+Am7b5 D7
+Gm7 G7
+Cm7 F7
+Bbmaj7 Eb7
+Am7b5 D7
+Gm7 G7
+
+Am7b5 D7
+Gm7 ~
