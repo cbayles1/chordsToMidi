@@ -1,6 +1,3 @@
-output.midi 176 8
+output.midi 120 1
 
-Bb D7/A 
-G7 G7 
-C7 F7 
-Bb F7
+C Am F G
