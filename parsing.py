@@ -35,14 +35,31 @@ def convertTildes(chords):
                 chords[i] = chords[i-1]
                 chord = chords[i-1]
 
+def closerInversions(nc, prevnc):
+    for i in range(0, min(len(nc), len(prevnc))):
+        now = nc[i].__int__()
+        prev = prevnc[i].__int__()
+        
+        
+        
+    return nc
+
+def chordToNC(chord):
+    notes = mchords.from_shorthand(chord)
+    return NoteContainer(notes)
+
 def chordsToTrack(chords, addRoots=True):
     t = Track()
     for i in range(0, len(chords)):
-        chord = chords[i]
-        root = getRoot(chord)
-        notes = mchords.from_shorthand(chord)
         
-        nc = NoteContainer(notes)
+        chord = chords[i]
+        nc = chordToNC(chord)
+        
+        if i > 0:
+            print()
+            nc = closerInversions(nc, chordToNC(chords[i-1]))
+        
+        root = getRoot(chord)
         if addRoots: nc.add_note(root + "-2")
         
         b = Bar()
