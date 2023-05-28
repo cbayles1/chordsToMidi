@@ -1,3 +1,0 @@
-output.midi 176 1
-
-C Am F G
