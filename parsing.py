@@ -35,13 +35,26 @@ def convertTildes(chords):
                 chords[i] = chords[i-1]
                 chord = chords[i-1]
 
-def closerInversions(nc, prevnc):
+def calcInversionDistance(nc, prevnc):
+    sum = 0
+    
     for i in range(0, min(len(nc), len(prevnc))):
         now = nc[i].__int__()
         prev = prevnc[i].__int__()
         
+        sum += abs(now - prev)
         
-        
+    return sum
+
+def closestInversions(nc, prevnc):
+    for note in nc:
+        a = nc
+        for i in range(3): #TODO: CHANGE FROM 3
+            print(str(a) + "\t" + str(prevnc) + "\t" + str(calcInversionDistance(a, prevnc)))
+            a = mchords.invert(a) #TODO: ISN'T WILLING TO DEVIATE FROM ORIGINAL PITCHES, IT JUST SHUFFLES
+            a[2].octave_up() #TODO: GO DOWN TOO
+        print()
+            
     return nc
 
 def chordToNC(chord):
@@ -56,8 +69,7 @@ def chordsToTrack(chords, addRoots=True):
         nc = chordToNC(chord)
         
         if i > 0:
-            print()
-            nc = closerInversions(nc, chordToNC(chords[i-1]))
+            nc = closestInversions(nc, chordToNC(chords[i-1]))
         
         root = getRoot(chord)
         if addRoots: nc.add_note(root + "-2")
