@@ -2,6 +2,7 @@ import re
 from mingus.containers import Track
 from mingus.containers import Bar
 from mingus.containers import NoteContainer
+from mingus.containers import Note
 from mingus.midi import midi_file_out
 import mingus.core.chords as mchords
 
@@ -46,14 +47,16 @@ def calcInversionDistance(nc, prevnc):
         
     return sum
 
-def inverter(nc, prevnc, amtForLoops, forLoopIndex):
-    if forLoopIndex >= amtForLoops:
-        print(str(nc) + "\t" + str(prevnc) + "\t" + str(calcInversionDistance(nc, prevnc)))
-    else:
+def inverter(nc, prevnc, amtNotes, noteAffected):
+    if noteAffected < amtNotes:
         for i in range(-1,2):
-            nc[forLoopIndex].from_int(nc[forLoopIndex].__int__() + 12 * i)
-            print(nc[forLoopIndex])
-            inverter(nc, prevnc, amtForLoops, forLoopIndex + 1)
+            new = int(nc[noteAffected]) + 12 * i
+            nc[noteAffected].from_int(new)
+            inverter(nc, prevnc, amtNotes, noteAffected + 1)
+        print()
+    else:
+        #print(str(nc) + "\t" + str(prevnc) + "\t" + str(calcInversionDistance(nc, prevnc)))
+        print(str(nc))
 
 def closestInversions(nc, prevnc):
     numNotes = min(len(nc), len(prevnc))

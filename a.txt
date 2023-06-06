@@ -1,0 +1,8 @@
+C-4 E-4 G-4
+call(C-3 E-4 G-4):
+    call(C-3 E-3 G-4):
+        call(C-3 E-3 G-3):
+            print(C-3 E-3 G-3)
+        call(C-3 E-3 G-3):
+        
+        
