@@ -36,48 +36,60 @@ def convertTildes(chords):
                 chords[i] = chords[i-1]
                 chord = chords[i-1]
 
-def calcInversionDistance(nc, prevnc):
-    sum = 0
-    
-    for i in range(0, min(len(nc), len(prevnc))):
-        now = nc[i].__int__()
-        prev = prevnc[i].__int__()
-        
-        sum += abs(now - prev)
-        
-    return sum
+def closestInversion(nc, prevnc):
 
-def inverter(nc, prevnc, amtNotes, noteAffected):
-    if noteAffected < amtNotes:
-        for i in range(-1,2):
-            new = int(nc[noteAffected]) + 12 * i
-            nc[noteAffected].from_int(new)
-            inverter(nc, prevnc, amtNotes, noteAffected + 1)
-        print()
-    else:
-        #print(str(nc) + "\t" + str(prevnc) + "\t" + str(calcInversionDistance(nc, prevnc)))
-        print(str(nc))
+    def generate_combinations(positions):
+        n = len(positions)
 
-def closestInversions(nc, prevnc):
-    numNotes = min(len(nc), len(prevnc))
-    inverter(nc, prevnc, numNotes, 0)
-    
-#    print(str(a) + "\t" + str(prevnc) + "\t" + str(calcInversionDistance(a, prevnc)))
-    
-    #for i in range(nc[0] - 12, nc[0] + 12, 12):
-    #    for j in range(nc[1] - 12, nc[1] + 12, 12):
-    #        for k in range(nc[2] - 12, nc[2] + 12, 12):
-    #            etc etc ...   
-    
-    #for note in nc:
-    #    a = nc
-    #    for i in range(3): #TODO: CHANGE FROM 3
-    #        print(str(a) + "\t" + str(prevnc) + "\t" + str(calcInversionDistance(a, prevnc)))
-    #        a = mchords.invert(a) #TODO: ISN'T WILLING TO DEVIATE FROM ORIGINAL PITCHES, IT JUST SHUFFLES
-    #        a[2].octave_up() #TODO: GO DOWN TOO
-    #    print()
+        all_combinations = []
+        current_combination = [0] * n
+
+        def generate_combinations_recursive(position):
+            if position == n:
+                all_combinations.append(list(current_combination))
+                return
+
+            values = positions[position]
+            for value in values:
+                current_combination[position] = value
+                generate_combinations_recursive(position + 1)
+
+        generate_combinations_recursive(0)
+        return all_combinations
+
+    def noteNumsToNoteContainer(nums):
+        arr = []
+        for note in nums:
+            new = Note()
+            new.from_int(note)
+            arr.append(new)
             
-    return nc
+        nc = NoteContainer()
+        nc.add_notes(arr)
+        return nc
+ 
+    def calcInversionDistance(nc, prevnc):
+        sum = 0
+        
+        for i in range(0, min(len(nc), len(prevnc))):
+            now = int(nc[i])
+            prev = int(prevnc[i])
+            
+            sum += abs(now - prev)
+            
+        return sum
+
+    options = [[int(note) - 12, int(note), int(note) + 12] for note in nc]
+    combinations = generate_combinations(options)
+    
+    best = combinations[0]
+    for combo in combinations:
+        a = calcInversionDistance(combo, prevnc)
+        b = calcInversionDistance(best, prevnc)
+        if calcInversionDistance(combo, prevnc) < calcInversionDistance(best, prevnc):
+            best = combo
+
+    return noteNumsToNoteContainer(best)
 
 def chordToNC(chord):
     notes = mchords.from_shorthand(chord)
@@ -91,7 +103,9 @@ def chordsToTrack(chords, addRoots=True):
         nc = chordToNC(chord)
         
         if i > 0:
-            nc = closestInversions(nc, chordToNC(chords[i-1]))
+            nc = closestInversion(nc, chordToNC(chords[i-1]))
+        
+        print(nc)
         
         root = getRoot(chord)
         if addRoots: nc.add_note(root + "-2")
