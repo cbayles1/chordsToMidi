@@ -69,14 +69,36 @@ def closestInversion(nc, prevnc):
         return nc
  
     def calcInversionDistance(nc, prevnc):
+        total_distance = 0
+        num_pairs = 0
+
+        for note1 in nc:
+            for note2 in prevnc:
+                distance = abs(note1 - int(note2))
+                total_distance += distance
+                num_pairs += 1
+
+        if num_pairs > 0:
+            avg_distance = total_distance / num_pairs
+        else:
+            avg_distance = 0
+
+        return avg_distance
+ 
+    def oldCalcInversionDistance(nc, prevnc):
         sum = 0
         
         for i in range(0, min(len(nc), len(prevnc))):
-            now = int(nc[i])
+            now = nc[i]
             prev = int(prevnc[i])
             
             sum += abs(now - prev)
             
+            print("i: " + str(i))
+            print("Now: " + str(now))
+            print("Prev: " + str(prev))
+        
+        print("Sum: " + str(sum)) 
         return sum
 
     options = [[int(note) - 12, int(note), int(note) + 12] for note in nc]
@@ -88,7 +110,7 @@ def closestInversion(nc, prevnc):
         b = calcInversionDistance(best, prevnc)
         if calcInversionDistance(combo, prevnc) < calcInversionDistance(best, prevnc):
             best = combo
-
+    
     return noteNumsToNoteContainer(best)
 
 def chordToNC(chord):
