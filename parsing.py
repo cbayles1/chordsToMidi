@@ -10,7 +10,7 @@ def getHeader(filepath):
     with open(filepath, 'rt', encoding="utf-8") as f:
         header = f.readline().strip().split()
         header[1] = int(header[1]) #TEMPO
-        header[2] = int(header[2]) #REPEAT
+        header[2] = int(header[2]) - 1 #REPEAT
         return header
 
 def getChords(filepath):
