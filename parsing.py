@@ -124,8 +124,8 @@ def chordsToTrack(chords, addRoots=True):
         chord = chords[i]
         nc = chordToNC(chord)
         
-        if i > 0:
-            nc = closestInversion(nc, chordToNC(chords[i-1]))
+        #if i > 0:
+        #    nc = closestInversion(nc, chordToNC(chords[i-1]))
         
         print(nc)
         
